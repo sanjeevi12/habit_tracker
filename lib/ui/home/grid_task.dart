@@ -15,13 +15,13 @@ class GridTask extends StatelessWidget {
       builder: (context, constraints) {
         final crossAxisSpacing = constraints.maxWidth * 0.05;
         final taskWidth = (constraints.maxWidth - crossAxisSpacing) / 2.0;
-        const aspectRatio = 0.80;
+        const aspectRatio = 0.65;
         final taskHeight = taskWidth / aspectRatio;
         final mainAxisSpacing =
             max((constraints.maxHeight - taskHeight * 3) / 2.0, 0.1);
         return GridView.builder(
           padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
+          physics:  NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: crossAxisSpacing,
