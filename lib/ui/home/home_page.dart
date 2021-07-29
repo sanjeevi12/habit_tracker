@@ -1,42 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker_flutter/constants/app_assets.dart';
+import 'package:habit_tracker_flutter/models/task.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habit_tracker_flutter/models/task_preset.dart';
+import 'package:habit_tracker_flutter/persistance/hive_data_store.dart';
 import 'package:habit_tracker_flutter/ui/home/grid_task.dart';
 import 'package:habit_tracker_flutter/ui/task/animated_task.dart';
 import 'package:habit_tracker_flutter/ui/task/task_completion_ring.dart';
 import 'package:habit_tracker_flutter/ui/task/task_with_name.dart';
 import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
+import 'package:hive/hive.dart';
 
 import 'grid_task_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // final box =  HiveDataStore();
+    final box = Hive.box<Task>(HiveDataStore.tasksBoxName);
     return Scaffold(
-        backgroundColor: AppTheme.of(context).primary,
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4, vertical: 5),
-            child: GridTaskPage(tasks: [
-              TaskPreset(
-                  name: 'Eat a Healthy Meal', iconName: AppAssets.carrot),
-              TaskPreset(name: 'Walk the Dog', iconName: AppAssets.dog),
-              TaskPreset(name: 'Do Some Coding', iconName: AppAssets.html),
-              TaskPreset(name: 'Meditate', iconName: AppAssets.meditation),
-              TaskPreset(name: 'Do 10 Pushups', iconName: AppAssets.pushups),
-              TaskPreset(name: 'Sleep 8 Hours', iconName: AppAssets.rest),
-            ]),
-          ),
-        )
-
-        //   Center(
-        //     child: SizedBox(
-        //       width: 250,
-        //       child:
-        //       TaskWithName(task:
-        // TaskPreset(name: 'Do 10 Pushups', iconName: AppAssets.pushups),)
-        //       )
-        //       ),
-        );
+      backgroundColor: AppTheme.of(context).primary,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+          child: ValueListenableBuilder(
+              valueListenable:
+              //for listenable use hive_flutter import.
+                  box.listenable(),
+              builder: (_, Box<Task> box, __) => GridTaskPage(tasks: box.values.toList())),
+        ),
+      ),
+    );
   }
 }

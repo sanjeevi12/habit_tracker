@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker_flutter/models/task.dart';
 import 'package:habit_tracker_flutter/models/task_preset.dart';
 import 'package:habit_tracker_flutter/ui/task/animated_task.dart';
 import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
 
 class TaskWithName extends StatelessWidget {
-  final TaskPreset task;
+  final Task task;
   const TaskWithName({Key? key, required this.task}) : super(key: key);
 
   @override
