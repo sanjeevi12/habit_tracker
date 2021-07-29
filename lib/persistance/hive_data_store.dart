@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker_flutter/models/task.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -26,8 +27,12 @@ await Hive.openBox<Task>(tasksBoxName);
     }
   }
 //  valueListenable in ui Screen, built in with.
+ //for listenable use hive_flutter import.
     ValueListenable<Box<Task>> tasksListenable(){
 return Hive.box<Task>(tasksBoxName).listenable();
     }
-
 }
+
+  final dataStoreProvider = Provider<HiveDataStore>((ref) {
+      return HiveDataStore();
+  });
