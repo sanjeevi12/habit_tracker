@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker_flutter/models/task.dart';
-import 'package:habit_tracker_flutter/models/task_preset.dart';
 import 'package:habit_tracker_flutter/ui/home/grid_task.dart';
 import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
 
