@@ -5,9 +5,16 @@ import 'package:habit_tracker_flutter/ui/task/task_completion_ring.dart';
 import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
 
 class AnimatedTask extends StatefulWidget {
+  const AnimatedTask(
+      {Key? key,
+      required this.iconData,
+      required this.completed,
+      this.onCompleted})
+      : super(key: key);
   final String iconData;
+  final bool completed;
+  final ValueChanged<bool>? onCompleted;
 
-  const AnimatedTask({Key? key, required this.iconData}) : super(key: key);
   @override
   _AnimatedTaskState createState() => _AnimatedTaskState();
 }
@@ -26,7 +33,7 @@ class _AnimatedTaskState extends State<AnimatedTask>
     _curvedAnimation =
         _animationController.drive(CurveTween(curve: Curves.easeInOut));
     _animationController.addStatusListener(_checkStatusListener);
-
+    print(widget.completed);
     // _animationController.forward();
     // _animationController.addListener(() {
     //   setState(() {});
@@ -42,23 +49,35 @@ class _AnimatedTaskState extends State<AnimatedTask>
   }
 
   void _checkStatusListener(AnimationStatus status) {
+    print(widget.completed);
     if (status == AnimationStatus.completed) {
-      setState(() {
-        _showCheckIcon = true;
-      });
-      Future.delayed(Duration(seconds: 1), () {
-        setState(() {
-          _showCheckIcon = false;
-        });
+      widget.onCompleted?.call(true);
+
+// widget.onCompleted!(true);
+      // if(widget.onCompleted != null){
+      //   // return true;
+      //   widget.onCompleted!(true) ;
+      // }
+      if (mounted) {
+        setState(() =>
+          _showCheckIcon = true
+        );
+      }
+       Future.delayed(Duration(seconds: 1), () {
+        if (mounted) {
+          setState(() => _showCheckIcon = false);
+        }
       });
     }
   }
 
   void _onTapDown(TapDownDetails details) {
-    if (_animationController.status != AnimationStatus.completed) {
+    if (!widget.completed &&
+        _animationController.status != AnimationStatus.completed) {
       _animationController.forward();
     } else if (!_showCheckIcon) {
-      _animationController.value = 0;
+      widget.onCompleted?.call(false);
+      _animationController.value = 0.0;
     }
   }
 
@@ -72,29 +91,29 @@ class _AnimatedTaskState extends State<AnimatedTask>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: _onTapDown,
-      onTapUp: (_)=> _onTapcancel(),
-      onTapCancel:_onTapcancel,
+      onTapUp: (_) => _onTapcancel(),
+      onTapCancel: _onTapcancel,
       child: AnimatedBuilder(
           animation: _curvedAnimation,
           builder: (BuildContext context, Widget? child) {
             final themeData = AppTheme.of(context);
-            final progress = _curvedAnimation.value;
-            final hasCompleted = progress == 1;
+            // final progress = 1.0;
+            final progress = widget.completed ? 1.0 : _curvedAnimation.value;
+            final hasCompleted = progress == 1.0;
+            final iconColor =
+                hasCompleted ? themeData.accentNegative : themeData.accent;
             return Stack(
               children: [
-                TaskCompletionRing(
-                  progress: _curvedAnimation.value,
-                ),
+                TaskCompletionRing(progress: progress),
                 Positioned.fill(
                     child: CenteredSvgIcon(
-                  iconName: _showCheckIcon ? AppAssets.check : widget.iconData,
-                  color: hasCompleted
-                      ? themeData.accentNegative
-                      : themeData.accent,
-                ))
+                        iconName: hasCompleted && _showCheckIcon
+                            ? AppAssets.check
+                            : widget.iconData,
+                        color: iconColor))
               ],
             );
           }),
     );
-  } 
+  }
 }

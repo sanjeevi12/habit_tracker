@@ -3,6 +3,8 @@ import 'package:habit_tracker_flutter/models/task.dart';
 import 'package:habit_tracker_flutter/ui/home/grid_task.dart';
 import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
 
+import 'home_flip.dart';
+
 class GridTaskPage extends StatelessWidget {
   const GridTaskPage({Key? key, required this.tasks}) : super(key: key);
   final List<Task> tasks;
@@ -26,9 +28,19 @@ class GridTaskContent extends StatelessWidget {
   final List<Task> tasks;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14),
-      child: GridTask(tasks: tasks),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
+            child: GridTask(tasks: tasks),
+          ),
+        ),
+         HomeFlip(
+          // onFlip: onFlip,
+        ),
+      ],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:habit_tracker_flutter/models/task.dart';
 import 'package:habit_tracker_flutter/ui/task/task_with_name.dart';
+import 'package:habit_tracker_flutter/ui/task/task_with_name_loader.dart';
 
 class GridTask extends StatelessWidget {
   final List<Task> tasks;
@@ -30,7 +31,7 @@ class GridTask extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             final task = tasks[index];
-            return TaskWithName(
+            return TaskWithNameLoader(
               task: task,
             );
           },

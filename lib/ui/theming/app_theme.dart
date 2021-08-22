@@ -70,7 +70,7 @@ class AppTheme extends InheritedWidget {
       throw StateError('Could not find ancestor widget of type `AppTheme`');
     }
   }
-
+//! Extends InheritedWidget.
   @override
   bool updateShouldNotify(AppTheme oldWidget) => data != oldWidget.data;
 }
