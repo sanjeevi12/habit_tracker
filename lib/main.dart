@@ -9,7 +9,6 @@ import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // final dataSource = ref.watch(dataStoreProvider);
   final dataSource = HiveDataStore();
   await dataSource.init();
   await dataSource.createDemoTasks(
@@ -30,14 +29,6 @@ Future<void> main() async {
       Task.create(name: 'Do 10 Pushups', iconName: AppAssets.pushups),
       Task.create(name: 'Sleep 8 Hours', iconName: AppAssets.rest),
     ],);
-  //   tasks: [
-  //   Task.create(name: 'Drink Water', iconName: AppAssets.water),
-  //   Task.create(name: 'Practice Instrument', iconName: AppAssets.guitar),
-  //   Task.create(name: 'Read for 10 Minutes', iconName: AppAssets.book),
-  //   Task.create(name: 'Don\'t Smoke', iconName: AppAssets.smoking),
-  //   Task.create(name: 'Don\'t Drink Alcohol', iconName: AppAssets.beer),
-  //   Task.create(name: 'Decrease Screen Time', iconName: AppAssets.phone),
-  // ]);
   await AppAssets.preloadSVGs();
   runApp(ProviderScope(
     overrides: [
@@ -54,6 +45,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Helvetica Neue',
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent
       ),
       home: AppTheme(
         data: AppThemeData.defaultWithSwatch(AppColors.red),

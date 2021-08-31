@@ -6,8 +6,9 @@ import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
 import 'home_flip.dart';
 
 class GridTaskPage extends StatelessWidget {
-  const GridTaskPage({Key? key, required this.tasks}) : super(key: key);
+  const GridTaskPage({Key? key, required this.tasks,required this.onFlip}) : super(key: key);
   final List<Task> tasks;
+  final VoidCallback? onFlip;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +17,7 @@ class GridTaskPage extends StatelessWidget {
       body: SafeArea(
         child: GridTaskContent(
           tasks: tasks,
+          onFlip: onFlip,
         ),
       ),
     );
@@ -23,9 +25,10 @@ class GridTaskPage extends StatelessWidget {
 }
 
 class GridTaskContent extends StatelessWidget {
-  const GridTaskContent({Key? key, required this.tasks}) : super(key: key);
+  const GridTaskContent({Key? key, required this.tasks,required this.onFlip}) : super(key: key);
 
   final List<Task> tasks;
+  final VoidCallback? onFlip;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,7 +41,7 @@ class GridTaskContent extends StatelessWidget {
           ),
         ),
          HomeFlip(
-          // onFlip: onFlip,
+          onFlip: onFlip,
         ),
       ],
     );
