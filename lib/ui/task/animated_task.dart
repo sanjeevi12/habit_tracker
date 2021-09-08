@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_tracker_flutter/animation/animation_controller.dart';
 import 'package:habit_tracker_flutter/constants/app_assets.dart';
 import 'package:habit_tracker_flutter/ui/common_widgets/centered_svg_icon.dart';
 import 'package:habit_tracker_flutter/ui/task/task_completion_ring.dart';
@@ -16,35 +17,30 @@ class AnimatedTask extends StatefulWidget {
   final ValueChanged<bool>? onCompleted;
 
   @override
-  _AnimatedTaskState createState() => _AnimatedTaskState();
+  _AnimatedTaskState createState() => _AnimatedTaskState(Duration(milliseconds: 700));
 }
 
-class _AnimatedTaskState extends State<AnimatedTask>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
+class _AnimatedTaskState extends AnimationControllerState<AnimatedTask> {
+  _AnimatedTaskState(Duration duration):super(duration);
+  // late final AnimationController animationController;
   late final Animation<double> _curvedAnimation;
   bool _showCheckIcon = false;
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 740));
-    _animationController.value;
+    // animationController =
+    //     AnimationController(vsync: this, duration: Duration(milliseconds: 740));
+    // animationController.value;
     _curvedAnimation =
-        _animationController.drive(CurveTween(curve: Curves.easeInOut));
-    _animationController.addStatusListener(_checkStatusListener);
+        animationController.drive(CurveTween(curve: Curves.easeInOut));
+    animationController.addStatusListener(_checkStatusListener);
     print(widget.completed);
-    // _animationController.forward();
-    // _animationController.addListener(() {
-    //   setState(() {});
-    // print('${_animationController.value'});
-    // });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _animationController.removeStatusListener(_checkStatusListener);
+    animationController.dispose();
+    animationController.removeStatusListener(_checkStatusListener);
     super.dispose();
   }
 
@@ -52,18 +48,10 @@ class _AnimatedTaskState extends State<AnimatedTask>
     print(widget.completed);
     if (status == AnimationStatus.completed) {
       widget.onCompleted?.call(true);
-
-// widget.onCompleted!(true);
-      // if(widget.onCompleted != null){
-      //   // return true;
-      //   widget.onCompleted!(true) ;
-      // }
       if (mounted) {
-        setState(() =>
-          _showCheckIcon = true
-        );
+        setState(() => _showCheckIcon = true);
       }
-       Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 1), () {
         if (mounted) {
           setState(() => _showCheckIcon = false);
         }
@@ -73,17 +61,17 @@ class _AnimatedTaskState extends State<AnimatedTask>
 
   void _onTapDown(TapDownDetails details) {
     if (!widget.completed &&
-        _animationController.status != AnimationStatus.completed) {
-      _animationController.forward();
+        animationController.status != AnimationStatus.completed) {
+      animationController.forward();
     } else if (!_showCheckIcon) {
       widget.onCompleted?.call(false);
-      _animationController.value = 0.0;
+      animationController.value = 0.0;
     }
   }
 
   void _onTapcancel() {
-    if (_animationController.status != AnimationStatus.completed) {
-      _animationController.reverse();
+    if (animationController.status != AnimationStatus.completed) {
+      animationController.reverse();
     }
   }
 

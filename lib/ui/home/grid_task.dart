@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:habit_tracker_flutter/models/task.dart';
-import 'package:habit_tracker_flutter/ui/task/task_with_name.dart';
 import 'package:habit_tracker_flutter/ui/task/task_with_name_loader.dart';
 
 class GridTask extends StatelessWidget {
@@ -16,7 +15,7 @@ class GridTask extends StatelessWidget {
       builder: (context, constraints) {
         final crossAxisSpacing = constraints.maxWidth * 0.05;
         final taskWidth = (constraints.maxWidth - crossAxisSpacing) / 2.0;
-        const aspectRatio = 0.65;
+        const aspectRatio = 0.82;
         final taskHeight = taskWidth / aspectRatio;
         final mainAxisSpacing =
             max((constraints.maxHeight - taskHeight * 3) / 2.0, 0.1);
