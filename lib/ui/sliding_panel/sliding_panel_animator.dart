@@ -20,28 +20,33 @@ class SlidingPanelAnimatorState
   void slideIn() => animationController.forward();
   void slideOut() => animationController.reverse();
 
+  late final curveAnimation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: animationController, curve: Curves.easeInCirc));
+
   double _getOffsetX(double screenWidth, double animationValue) {
-    final startOffset = widget.direction == SlideDirection.rightToLeft?
-    screenWidth-SlidingPanel.leftPanelFixedWidth: -SlidingPanel.leftPanelFixedWidth;
-  //  return 0;
-    return startOffset *(1.0 - animationValue);
-  } 
+    final startOffset = widget.direction == SlideDirection.rightToLeft
+        ? screenWidth - SlidingPanel.leftPanelFixedWidth
+        : -SlidingPanel.leftPanelFixedWidth;
+    //  return 0;
+    return startOffset * (1.0 - animationValue);
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: animationController,
-      child: SlidingPanel(child: widget.child,direction: widget.direction,),
+      animation: curveAnimation,
+      child: SlidingPanel(
+        child: widget.child,
+        direction: widget.direction,
+      ),
       builder: (context, child) {
         final screenWidth = MediaQuery.of(context).size.width;
-        final animationValue = animationController.value ;
-        if(animationValue == 0){
+        final animationValue = curveAnimation.value;
+        if (animationValue == 0) {
           return Container();
         }
         final offsetX = _getOffsetX(screenWidth, animationValue);
-        return Transform.translate(
-          offset: Offset(offsetX, 0),
-          child: child
-        );
+        return Transform.translate(offset: Offset(offsetX, 0), child: child);
       },
     );
   }

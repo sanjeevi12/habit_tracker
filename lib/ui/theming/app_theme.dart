@@ -33,23 +33,47 @@ class AppThemeData {
     required this.overlayStyle,
   });
 
-  factory AppThemeData.defaultWithSwatch(List<Color> swatch) {
+  static AppThemeData lerp(AppThemeData a, AppThemeData b, double t) {
+    final overlayStyle = t < 0.5 ? a.overlayStyle : b.overlayStyle;
     return AppThemeData(
-      primary: swatch[0],
-      secondary: swatch[1],
-      accent: AppColors.white,
-      accentNegative: AppColors.black,
-      taskRing: swatch[4],
-      taskIcon: AppColors.white,
-      settingsText: AppColors.white,
-      settingsLabel: AppColors.white60,
-      settingsCta: swatch[3],
-      settingsListIconBackground: swatch[2],
-      settingsInactiveIconBackground: swatch[2],
-      inactiveThemePanelRing: AppColors.grey,
-      overlayStyle: SystemUiOverlayStyle.light,
+      primary: Color.lerp(a.primary, b.primary, t)!,
+      secondary: Color.lerp(a.secondary, b.secondary, t)!,
+      accent: Color.lerp(a.accent, b.accent, t)!,
+      accentNegative: Color.lerp(a.accentNegative, b.accentNegative, t)!,
+      taskRing: Color.lerp(a.taskRing, b.taskRing, t)!,
+      taskIcon: Color.lerp(a.taskIcon, b.taskIcon, t)!,
+      settingsText: Color.lerp(a.settingsText, b.settingsText, t)!,
+      settingsLabel: Color.lerp(a.settingsLabel, b.settingsLabel, t)!,
+      settingsCta: Color.lerp(a.settingsCta, b.settingsCta, t)!,
+      settingsListIconBackground: Color.lerp(
+          a.settingsListIconBackground, b.settingsListIconBackground, t)!,
+      settingsInactiveIconBackground: Color.lerp(
+          a.settingsInactiveIconBackground,
+          b.settingsInactiveIconBackground,
+          t)!,
+      inactiveThemePanelRing:
+          Color.lerp(a.inactiveThemePanelRing, b.inactiveThemePanelRing, t)!,
+      overlayStyle: overlayStyle,
     );
   }
+
+  // factory AppThemeData.defaultWithSwatch(List<Color> swatch) {
+  //   return AppThemeData(
+  //     primary: swatch[0],
+  //     secondary: swatch[1],
+  //     accent: AppColors.white,
+  //     accentNegative: AppColors.black,
+  //     taskRing: swatch[4],
+  //     taskIcon: AppColors.white,
+  //     settingsText: AppColors.white,
+  //     settingsLabel: AppColors.white60,
+  //     settingsCta: swatch[3],
+  //     settingsListIconBackground: swatch[2],
+  //     settingsInactiveIconBackground: swatch[2],
+  //     inactiveThemePanelRing: AppColors.grey,
+  //     overlayStyle: SystemUiOverlayStyle.light,
+  //   );
+  // }
 }
 
 // Class for reading AppThemeData via InheritedWidget
@@ -70,6 +94,7 @@ class AppTheme extends InheritedWidget {
       throw StateError('Could not find ancestor widget of type `AppTheme`');
     }
   }
+
 //! Extends InheritedWidget.
   @override
   bool updateShouldNotify(AppTheme oldWidget) => data != oldWidget.data;

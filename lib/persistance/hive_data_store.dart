@@ -8,39 +8,37 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HiveDataStore {
-
   static const frontTasksBoxName = 'frontTasks';
   static const backTasksBoxName = 'backTasks';
-    static const tasksStateBoxName = 'tasksState';
+  static const tasksStateBoxName = 'tasksState';
   static String taskStateKey(String key) => 'taskState/$key';
   // static String taskKeyState({required Task task}) => 'taskState/${task.id}';
   static const frontAppThemeBoxName = 'frontAppTheme';
   static const backAppThemeBoxName = 'backAppTheme';
 
   Future<void> init() async {
-    //* Initialization cames over a main.dart. 
+    //* Initialization cames over a main.dart.
     await Hive.initFlutter();
 
     //*Register a Adapter
     Hive.registerAdapter<Task>(TaskAdapter());
     Hive.registerAdapter<TaskState>(TaskStateAdapter());
 
-    //*Open Hive Box 
-   await Hive.openBox<Task>(frontTasksBoxName);
+    //*Open Hive Box
+    await Hive.openBox<Task>(frontTasksBoxName);
     await Hive.openBox<Task>(backTasksBoxName);
     await Hive.openBox<TaskState>(tasksStateBoxName);
 
-     await Hive.openBox<AppThemeSettings>(frontAppThemeBoxName);
+    await Hive.openBox<AppThemeSettings>(frontAppThemeBoxName);
     await Hive.openBox<AppThemeSettings>(backAppThemeBoxName);
   }
 
   Future<void> createDemoTasks(
-      {
-        required List<Task> frontTasks,
-    required List<Task> backTasks,
+      {required List<Task> frontTasks,
+      required List<Task> backTasks,
       required bool force}) async {
- //* if force (True) params makes add to the list or Not
-        //* Hive Box Opens up with Concurrent name of an model Name.
+    //* if force (True) params makes add to the list or Not
+    //* Hive Box Opens up with Concurrent name of an model Name.
     final frontBox = Hive.box<Task>(frontTasksBoxName);
     if (frontBox.isEmpty || force == true) {
       await frontBox.clear();
@@ -60,7 +58,7 @@ class HiveDataStore {
 
   //*valueListenable in ui Screen, built in with.
   //*for listenable use hive_flutter import.
- ValueListenable<Box<Task>> frontTasksListenable() {
+  ValueListenable<Box<Task>> frontTasksListenable() {
     return Hive.box<Task>(frontTasksBoxName).listenable();
   }
 
@@ -68,29 +66,28 @@ class HiveDataStore {
     return Hive.box<Task>(backTasksBoxName).listenable();
   }
 
-
 //* set Task is Used for an data Completed or not after app is Destroyed same app state Need to be Processed.
   Future<void> setTaskState(
       {required Task task, required bool completed}) async {
-        print(task.id);
-         print(completed);
+    print(task.id);
+    print(completed);
 //* Hive Box Opens up with Concurrent name of an model Name.
     final box = Hive.box<TaskState>(tasksStateBoxName);
-    final taskState = TaskState(taskId: task.id,completed: completed);
+    final taskState = TaskState(taskId: task.id, completed: completed);
     //* Task with an Concurrent id will be processed, for the same model with a Task Id if Completed.
     // await box.put(taskKeyState(task: task.id), taskState);
-    await box.put(taskStateKey(task.id),taskState);
+    await box.put(taskStateKey(task.id), taskState);
   }
- 
+
   ValueListenable<Box<TaskState>> taskStateListenable({required Task task}) {
     final box = Hive.box<TaskState>(tasksStateBoxName);
     final key = taskStateKey(task.id);
     return box.listenable(keys: <String>[key]);
   }
 
-  TaskState taskState(Box<TaskState> box, {required Task task}){
+  TaskState taskState(Box<TaskState> box, {required Task task}) {
     final key = taskStateKey(task.id);
-    return box.get(key) ?? TaskState(taskId: task.id,completed: false);
+    return box.get(key) ?? TaskState(taskId: task.id, completed: false);
   }
 
   // App Theme Settings
@@ -118,5 +115,4 @@ class HiveDataStore {
 final dataStoreProvider = Provider<HiveDataStore>((ref) {
   throw UnimplementedError();
   // return HiveDataStore();
-}
-);
+});

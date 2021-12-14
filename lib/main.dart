@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker_flutter/constants/app_assets.dart';
-import 'package:habit_tracker_flutter/constants/app_colors.dart';
+import 'package:habit_tracker_flutter/models/front_or_back_side.dart';
 import 'package:habit_tracker_flutter/models/task.dart';
 import 'package:habit_tracker_flutter/persistance/hive_data_store.dart';
 import 'package:habit_tracker_flutter/ui/home/home_page.dart';
-import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
+import 'package:habit_tracker_flutter/ui/theming/app_theme_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final dataSource = HiveDataStore();
   await dataSource.init();
+
+  final frontThemeSettings =
+      await dataSource.appThemeSettings(side: FrontOrBackSide.front);
+  final backThemeSettings =
+      await dataSource.appThemeSettings(side: FrontOrBackSide.back);
+
   await dataSource.createDemoTasks(
     force: false,
     frontTasks: [
@@ -19,7 +25,7 @@ Future<void> main() async {
       Task.create(name: 'Wash Your Hands', iconName: AppAssets.washHands),
       Task.create(name: 'Wear a Mask', iconName: AppAssets.mask),
       Task.create(name: 'Brush Your Teeth', iconName: AppAssets.toothbrush),
-      Task.create(name: 'Floss Your Teeth', iconName: AppAssets.dentalFloss),
+      // Task.create(name: 'Floss Your Teeth', iconName: AppAssets.dentalFloss),
     ],
     backTasks: [
       Task.create(name: 'Eat a Healthy Meal', iconName: AppAssets.carrot),
@@ -27,15 +33,22 @@ Future<void> main() async {
       Task.create(name: 'Do Some Coding', iconName: AppAssets.html),
       Task.create(name: 'Meditate', iconName: AppAssets.meditation),
       Task.create(name: 'Do 10 Pushups', iconName: AppAssets.pushups),
-      Task.create(name: 'Sleep 8 Hours', iconName: AppAssets.rest),
-    ],);
-  await AppAssets.preloadSVGs();
-  runApp(ProviderScope(
-    overrides: [
-      //* it is used to overRide a Dependency Injection to be took Place and places the dataStoreprovider Globally.
-      dataStoreProvider.overrideWithValue(dataSource)
+      // Task.create(name: 'Sleep 8 Hours', iconName: AppAssets.rest),
     ],
-    child: MyApp()));
+  );
+  await AppAssets.preloadSVGs();
+  runApp(ProviderScope(overrides: [
+    //* it is used to overRide a Dependency Injection to be took Place and places the dataStoreprovider Globally.
+    dataStoreProvider.overrideWithValue(dataSource),
+    frontThemeManagerProvider.overrideWithValue(AppThemeManager(
+        themeSettings: frontThemeSettings,
+        side: FrontOrBackSide.front,
+        dataStore: dataSource)),
+    backThemeManagerProvider.overrideWithValue(AppThemeManager(
+        themeSettings: backThemeSettings,
+        side: FrontOrBackSide.back,
+        dataStore: dataSource))
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -44,15 +57,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Helvetica Neue',
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        hoverColor: Colors.transparent
-      ),
-      home: AppTheme(
-        data: AppThemeData.defaultWithSwatch(AppColors.red),
-        child: HomePage(),
-      ),
+          fontFamily: 'Helvetica Neue',
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          hoverColor: Colors.transparent),
+      home: 
+      //! Not a Default theme to be Selected.
+      // AppTheme(
+      //   data: AppThemeData.defaultWithSwatch(AppColors.red),
+      //   child: HomePage(),
+      // ),
+      //! Dynamic Theming 
+      HomePage()
     );
   }
 }

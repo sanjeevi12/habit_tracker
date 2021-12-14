@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit_tracker_flutter/ui/theming/app_theme.dart';
 
 class HomeFlip extends StatelessWidget {
-  const HomeFlip({Key? key, this.onFlip, this.onEnterEditMode}) : super(key: key);
+  const HomeFlip({Key? key, this.onFlip,required this.onEnterEditMode}) : super(key: key);
   final VoidCallback? onFlip;
   final VoidCallback? onEnterEditMode;
 
